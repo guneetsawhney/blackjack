@@ -11,7 +11,7 @@ public class Deck {
         int i = 0;
         while(i<52){
             //each card has uniform dist: 1/52
-            Card c = Card.generateRandomCard(52);
+            Card c = Card.generateRandomCard();
             if (deck.search(c) == -1){
                 deck.push(c);
                 i++;
@@ -21,6 +21,9 @@ public class Deck {
 
 
     public Card draw() {
-        return deck.pop();
+        Card topCard = deck.pop();
+
+
+        return topCard;
     }
 }
