@@ -7,19 +7,17 @@ import java.util.Random;
 public class Card {
     private Face aFace;
     private Suit aSuit;
-    private UniformIntVertex deckSize;
 
-    public Card(Face face, Suit suit, int noOfCards) {
+    public Card(Face face, Suit suit) {
         aFace = face;
         aSuit = suit;
-        deckSize = new UniformIntVertex (0, noOfCards);
     }
 
-    public static Card generateRandomCard(int deckSize) {
+    public static Card generateRandomCard() {
         Random rnd = new Random();
         Face[] faces = Face.values();
         Suit[] suits = Suit.values();
-        return new Card(faces[rnd.nextInt(faces.length)], suits[rnd.nextInt(suits.length)], deckSize);
+        return new Card(faces[rnd.nextInt(faces.length)], suits[rnd.nextInt(suits.length)]);
     }
 
     public int getPoints() {
@@ -28,10 +26,6 @@ public class Card {
 
     public Face getFace() {
         return aFace;
-    }
-
-    public UniformIntVertex getDeckSize() {
-        return deckSize;
     }
 
     @Override
