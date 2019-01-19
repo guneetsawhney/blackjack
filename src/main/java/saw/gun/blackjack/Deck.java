@@ -16,7 +16,7 @@ public class Deck {
         for (Card.Face f : Card.Face.values()) {
             for (Card.Suit c : Card.Suit.values()) {
                 Card thisCard = new Card(f, c);
-                frequency.put(thisCard, new ConstantDoubleVertex(1.0 / (Card.Suit.values().length + Card.Face.values().length)));
+                frequency.put(thisCard, new ConstantDoubleVertex(1.0 / (Card.Suit.values().length * Card.Face.values().length)));
             }
         }
 
