@@ -3,12 +3,12 @@ package saw.gun.blackjack;
 import java.util.Random;
 
 public class Card {
-    private Face mFace;
-    private Suit mSuit;
+    private Face aFace;
+    private Suit aSuit;
 
     private Card(Face face, Suit suit) {
-        mFace = face;
-        mSuit = suit;
+        aFace = face;
+        aSuit = suit;
     }
 
     public static Card generateRandomCard() {
@@ -19,21 +19,21 @@ public class Card {
     }
 
     public int getPoints() {
-        return mFace.asInt();
+        return aFace.asInt();
     }
 
     public Face getFace() {
-        return mFace;
+        return aFace;
     }
 
     @Override
     public String toString() {
-        return String.format("%c, %c", mFace.asChar(), mSuit.asChar());
+        return String.format("%c, %c", aFace.asChar(), aSuit.asChar());
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Card &&  mFace == ((Card) obj).mFace && mSuit == ((Card) obj).mSuit;
+        return obj instanceof Card &&  aFace == ((Card) obj).aFace && aSuit == ((Card) obj).aSuit;
     }
 
     public enum Face {
