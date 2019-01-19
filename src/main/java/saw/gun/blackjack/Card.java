@@ -44,7 +44,7 @@ public class Card {
         public int asInt() {
             switch (this) {
                 case ACE:
-                    return 1;
+                    return 1; // one or 11 depending on player
                 case TWO:
                     return 2;
                 case THREE:
