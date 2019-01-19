@@ -1,17 +1,20 @@
 package saw.gun.blackjack;
 
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class BlackjackUI extends Application {
-    private static BlackjackController mController = new BlackjackController();
+    private BlackjackController mController = new BlackjackController(this);
+    GridPane tablePane;
 
     public static void main(String[] args) {
         launch(args);
@@ -26,22 +29,23 @@ public class BlackjackUI extends Application {
         primaryStage.setScene(new Scene(root, 800, 600));
         root.setStyle("-fx-background-color: #5db779"); // Green table!
 
+        // Add table
+        tablePane = new GridPane();
+        root.setCenter(tablePane);
+        tablePane.setHgap(0);
+        tablePane.setVgap(10);
+
         // Add action panes
         root.setBottom(addActionPane());
 
-//        // TEST: add SVG
-//        SvgImageLoaderFactory.install();
-//        Image image = new Image("deck/1s.svg");
-//        ImageView imageView = new ImageView();
-//        imageView.setImage(image);
-//
-//        root.setTop(imageView);
-
         primaryStage.show();
+        primaryStage.setMaximized(true);
+
+        mController.prepareNewGame();
     }
 
     // Set up user action pane
-    private static BorderPane addActionPane() {
+    private BorderPane addActionPane() {
         BorderPane wrapper = new BorderPane();
 
         //region Action buttons
@@ -67,7 +71,7 @@ public class BlackjackUI extends Application {
 
         Button buttonNewGame = new Button("New Game");
         buttonNewGame.setPrefSize(100, 20);
-        buttonNewGame.setOnMouseClicked(mouseEvent -> mController.setNewDeck());
+        buttonNewGame.setOnMouseClicked(mouseEvent -> mController.prepareNewGame());
 
         newGameBox.getChildren().setAll(buttonNewGame);
         //endregion
@@ -77,7 +81,88 @@ public class BlackjackUI extends Application {
         wrapper.setStyle("-fx-background-color: #336699");
 
         return wrapper;
+    }
 
+    public void paintCard(int location, Card card, int cardOrder) {
+        int cardLocationX = location * 100;
+        int cardLocationY = 100 + cardOrder * 20;
+
+        SvgImageLoaderFactory.install();
+
+        // Get deck image's path
+        String faceString = "_b";
+        switch (card.getFace()) {
+            case ACE:
+                faceString = "1";
+                break;
+            case TWO:
+                faceString = "2";
+                break;
+            case THREE:
+                faceString = "3";
+                break;
+            case FOUR:
+                faceString = "4";
+                break;
+            case FIVE:
+                faceString = "5";
+                break;
+            case SIX:
+                faceString = "6";
+                break;
+            case SEVEN:
+                faceString = "7";
+                break;
+            case EIGHT:
+                faceString = "8";
+                break;
+            case NINE:
+                faceString = "9";
+                break;
+            case TEN:
+                faceString = "t";
+                break;
+            case JACK:
+                faceString = "j";
+                break;
+            case QUEEN:
+                faceString = "q";
+                break;
+            case KING:
+                faceString = "k";
+                break;
+        }
+
+        String suitString = "g";
+        switch (card.getSuit()) {
+            case DIAMONDS:
+                suitString = "d";
+                break;
+            case HEARTS:
+                suitString = "h";
+                break;
+            case CLUBS:
+                suitString = "c";
+                break;
+            case SPADES:
+                suitString = "s";
+                break;
+        }
+
+        ImageView imageView = new ImageView();
+        Image image;
+
+        try {
+            image = new Image("deck/" + faceString + suitString + ".png");
+        } catch (IllegalArgumentException e) {
+            image = new Image("deck/_bg.png");
+        }
+
+        imageView.setImage(image);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+
+        tablePane.add(imageView, location, cardOrder);
 
     }
 }
