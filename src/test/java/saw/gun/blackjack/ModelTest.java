@@ -1,4 +1,4 @@
-package com.example.starter;
+package saw.gun.blackjack;
 
 import org.junit.Test;
 

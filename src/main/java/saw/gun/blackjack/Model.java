@@ -1,4 +1,4 @@
-package com.example.starter;
+package saw.gun.blackjack;
 
 
 import io.improbable.keanu.algorithms.variational.optimizer.KeanuOptimizer;
