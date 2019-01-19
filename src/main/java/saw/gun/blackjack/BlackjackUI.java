@@ -27,15 +27,16 @@ public class BlackjackUI extends Application {
         // Add action panes
         root.setBottom(addActionPane());
 
-        // TEST: add SVG
-        SvgImageLoaderFactory.install();
-        Image image = new Image("deck/1s.svg");
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-
-        root.setTop(imageView);
+//        // TEST: add SVG
+//        SvgImageLoaderFactory.install();
+//        Image image = new Image("deck/1s.svg");
+//        ImageView imageView = new ImageView();
+//        imageView.setImage(image);
+//
+//        root.setTop(imageView);
 
         primaryStage.show();
+        root.setStyle("-fx-background-color: #5db779");
     }
 
     // Set up user action pane
