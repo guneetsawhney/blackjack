@@ -1,29 +1,23 @@
 package saw.gun.blackjack;
 
-import java.util.Stack;
+import java.util.HashMap;
 
 public class Deck {
 
-    private Stack<Card> deck;
+    private HashMap<Card, Double> deck;
 
     public Deck(){
-        deck = new Stack<>();
+        deck = new HashMap<>();
+        double prob = 1/52;
         int i = 0;
         while(i<52){
             //each card has uniform dist: 1/52
             Card c = Card.generateRandomCard();
-            if (deck.search(c) == -1){
-                deck.push(c);
+            if (!deck.containsKey(c)){
+                deck.put(c, prob);
                 i++;
             }
         }
     }
 
-
-    public Card draw() {
-        Card topCard = deck.pop();
-
-
-        return topCard;
-    }
 }
