@@ -1,17 +1,16 @@
 package saw.gun.blackjack;
 
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class BlackjackUI extends Application {
+    private static BlackjackController mController = new BlackjackController();
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -23,6 +22,7 @@ public class BlackjackUI extends Application {
         // Root pane
         BorderPane root = new BorderPane();
         primaryStage.setScene(new Scene(root, 800, 600));
+        root.setStyle("-fx-background-color: #5db779"); // Green table!
 
         // Add action panes
         root.setBottom(addActionPane());
@@ -36,7 +36,6 @@ public class BlackjackUI extends Application {
 //        root.setTop(imageView);
 
         primaryStage.show();
-        root.setStyle("-fx-background-color: #5db779");
     }
 
     // Set up user action pane
@@ -57,13 +56,14 @@ public class BlackjackUI extends Application {
         //endregion
 
 
-        //region New game buttons
+        //region New game button
         HBox newGameBox = new HBox();
         newGameBox.setPadding(new Insets(15, 12, 12, 12));
         newGameBox.setSpacing(10);
 
         Button buttonNewGame = new Button("New Game");
         buttonNewGame.setPrefSize(100, 20);
+        buttonNewGame.setOnMouseClicked(mouseEvent -> mController.setNewDeck());
 
         newGameBox.getChildren().setAll(buttonNewGame);
         //endregion
