@@ -1,21 +1,25 @@
 package saw.gun.blackjack;
 
+import io.improbable.keanu.vertices.intgr.probabilistic.UniformIntVertex;
+
 import java.util.Random;
 
 public class Card {
     private Face aFace;
     private Suit aSuit;
+    private UniformIntVertex deckSize;
 
-    private Card(Face face, Suit suit) {
+    public Card(Face face, Suit suit, int noOfCards) {
         aFace = face;
         aSuit = suit;
+        deckSize = new UniformIntVertex (0, noOfCards);
     }
 
-    public static Card generateRandomCard() {
+    public static Card generateRandomCard(int deckSize) {
         Random rnd = new Random();
         Face[] faces = Face.values();
         Suit[] suits = Suit.values();
-        return new Card(faces[rnd.nextInt(faces.length)], suits[rnd.nextInt(suits.length)]);
+        return new Card(faces[rnd.nextInt(faces.length)], suits[rnd.nextInt(suits.length)], deckSize);
     }
 
     public int getPoints() {
@@ -24,6 +28,10 @@ public class Card {
 
     public Face getFace() {
         return aFace;
+    }
+
+    public UniformIntVertex getDeckSize() {
+        return deckSize;
     }
 
     @Override
