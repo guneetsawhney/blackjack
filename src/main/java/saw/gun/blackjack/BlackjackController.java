@@ -18,4 +18,6 @@ public class BlackjackController {
     void setNewDeck() {
         setmDeck(new Deck());
     }
+
+    void drawCard() {mDeck.drawCard();}
 }

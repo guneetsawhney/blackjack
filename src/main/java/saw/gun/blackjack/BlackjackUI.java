@@ -1,9 +1,11 @@
 package saw.gun.blackjack;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -51,6 +53,8 @@ public class BlackjackUI extends Application {
         buttonDeal.setPrefSize(100, 20);
         Button buttonPass = new Button("Pass");
         buttonPass.setPrefSize(100, 20);
+
+        buttonDeal.setOnMouseClicked(mouseEvent -> mController.drawCard());
 
         actionBox.getChildren().addAll(buttonDeal, buttonPass);
         //endregion
