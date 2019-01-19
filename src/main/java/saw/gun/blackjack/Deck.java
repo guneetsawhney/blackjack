@@ -12,14 +12,15 @@ public class Deck {
     private CategoricalVertex<Card, GenericTensor<Card>> deck;
 
     public Deck(){
-        LinkedHashMap<Card, DoubleVertex> frequency = new LinkedHashMap<>();
-        for (Card.Face f : Card.Face.values()) {
-            for (Card.Suit c : Card.Suit.values()) {
-                Card thisCard = new Card(f, c);
-                frequency.put(thisCard, new ConstantDoubleVertex(1.0 / (Card.Suit.values().length * Card.Face.values().length)));
+        LinkedHashMap<Card, DoubleVertex> unshuffledDeck = new LinkedHashMap<>();
+        double deckSize = (Card.Suit.values().length * Card.Face.values().length);
+
+        while (unshuffledDeck.size() < deckSize) {
+            Card c = Card.generateRandomCard();
+            if (!unshuffledDeck.containsKey(c)) {
+                unshuffledDeck.put(c, new ConstantDoubleVertex(1.0 / deckSize));
             }
         }
-
-        deck = new CategoricalVertex<>(frequency);
+        deck = new CategoricalVertex<>(unshuffledDeck);
     }
 }
