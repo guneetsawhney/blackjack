@@ -1,5 +1,6 @@
 package saw.gun.blackjack;
 
+import io.improbable.keanu.network.BayesianNetwork;
 import io.improbable.keanu.tensor.generic.GenericTensor;
 import io.improbable.keanu.vertices.dbl.DoubleVertex;
 import io.improbable.keanu.vertices.dbl.nonprobabilistic.ConstantDoubleVertex;
@@ -14,10 +15,10 @@ public class Deck {
     private CategoricalVertex<Card, GenericTensor<Card>> deck;
     private Iterator<Map.Entry<Card, DoubleVertex>> deckIterator;
     private int iteratorCount = -1;
+    private double deckSize = (Card.Suit.values().length * Card.Face.values().length);
 
     public Deck(){
         LinkedHashMap<Card, DoubleVertex> unshuffledDeck = new LinkedHashMap<>();
-        double deckSize = (Card.Suit.values().length * Card.Face.values().length);
 
         while (unshuffledDeck.size() < deckSize) {
             Card c = Card.generateRandomCard();
@@ -32,9 +33,30 @@ public class Deck {
     public Card drawCard() {
         Card nextCard = deckIterator.next().getKey();
         deck.getSelectableValues().put(nextCard, new ConstantDoubleVertex(0));
-        Iterator<Map.Entry<Card, DoubleVertex>> followingIterator = deckIterator;
         iteratorCount++;
+        for (Card c : deck.getSelectableValues().keySet()){
+            if (c != nextCard){ //doing stuff
+                deck.getSelectableValues().replace(c, new ConstantDoubleVertex(1/(deckSize -1)));
+            }
+        }
 
         return nextCard;
     }
+
+    public void tryingStuffOut(){
+
+
+        BayesianNetwork bae = new BayesianNetwork(deck.getConnectedGraph());
+
+
+    }
+
+
+
+
+    public static void main(String[] args){
+        Deck d = new Deck();
+        d.drawCard();
+    }
 }
+

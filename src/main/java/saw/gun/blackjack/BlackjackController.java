@@ -34,7 +34,7 @@ public class BlackjackController {
         players.clear();
         dealer.clearDealerCards();
         for (int i = 0; i < totalPlayerCount; i++) {
-            players.add(new Player(Integer.toString(i+1), i));
+            players.add(new Player(Integer.toString(i + 1), i));
         }
     }
 
@@ -42,7 +42,9 @@ public class BlackjackController {
         setmDeck(new Deck());
     }
 
-    Card drawCard() {return mDeck.drawCard();}
+    Card drawCard() {
+        return mDeck.drawCard();
+    }
 
     void prepareNewGame() {
         setNewDeck();
