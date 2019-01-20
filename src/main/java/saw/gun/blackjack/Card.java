@@ -28,6 +28,10 @@ public class Card {
         return aFace;
     }
 
+    public Suit getSuit() {
+        return aSuit;
+    }
+
     @Override
     public String toString() {
         return String.format("%c, %c", aFace.asChar(), aSuit.asChar());
