@@ -1,5 +1,7 @@
 package saw.gun.blackjack;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 public class Player {
@@ -30,15 +32,45 @@ public class Player {
         return playerLocation;
     }
 
-    public void setPlayerLocation(int playerLocation) {
-        this.playerLocation = playerLocation;
-    }
-
     public Stack<Card> getCardinHand() {
         return cardinHand;
     }
 
-    public void setCardinHand(Stack<Card> cardinHand) {
-        this.cardinHand = cardinHand;
+    HashSet<Integer> cardPoints() {
+        HashSet<Integer> out = new HashSet<>();
+        for (Card c : cardinHand) {
+            if (c.getFace() == Card.Face.ACE) {
+                if (out.isEmpty()) {
+                    out.add(1);
+                    out.add(11);
+                }
+                else {
+                    HashSet<Integer> newOut = new HashSet<>();
+                    for (Integer i : out) {
+                        newOut.add(i+1);
+                        newOut.add(i+11);
+                    }
+                    out = newOut;
+                }
+            } else {
+                int cardFaceValue = c.getFace().asInt();
+                if (out.isEmpty()) out.add(cardFaceValue);
+                else {
+                    HashSet<Integer> newOut = new HashSet<>();
+                    for (Integer i : out) {
+                        newOut.add(i + cardFaceValue);
+                    }
+                    out = newOut;
+                }
+            }
+        }
+
+        return out;
     }
+
+//    public boolean cardDrawnWithinLimit(Card card) {
+//        if (Card.Face == Card.Face.ACE) {
+//
+//        }
+//    }
 }

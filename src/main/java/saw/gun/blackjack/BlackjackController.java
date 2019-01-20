@@ -1,6 +1,7 @@
 package saw.gun.blackjack;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BlackjackController {
     private Deck mDeck;
@@ -44,10 +45,13 @@ public class BlackjackController {
     void prepareNewGame() {
         setNewDeck();
         setNewPlayers();
-        handAllCards();
+        handNewCards();
+        for (Integer i : getCurrentPlayerPoints()) {
+            System.out.println(i);
+        }
     }
 
-    void handAllCards() {
+    void handNewCards() {
         for (int i = 0; i < 2; i++) {
             for (Player p : players) {
                 Card c = drawCard();
@@ -60,5 +64,27 @@ public class BlackjackController {
             if (i == 0) mUI.paintDealerCard(i, c, true);
             else mUI.paintDealerCard(i, c, false);
         }
+    }
+
+    void handCardToCurrentPlayer() {
+        Card thisCard = drawCard();
+        players.get(currentPlayerNumber).addCard(thisCard);
+        mUI.paintCard(currentPlayerNumber, thisCard, players.get(currentPlayerNumber).getCardinHand().size());
+
+        for (Integer i : getCurrentPlayerPoints()) {
+            System.out.println(i);
+        }
+    }
+
+    HashSet<Integer> getCurrentPlayerPoints() {
+        return players.get(currentPlayerNumber).cardPoints();
+    }
+
+    boolean currentPlayerPointsInLimit() {
+        for (int i : getCurrentPlayerPoints()) {
+            if (i <= 21) return true;
+        }
+
+        return false;
     }
 }
