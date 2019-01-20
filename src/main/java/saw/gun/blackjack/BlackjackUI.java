@@ -134,7 +134,7 @@ public class BlackjackUI extends Application {
         ImageView imageView = new ImageView();
         Image image;
         if (!faceForward) {
-            image = image = new Image("deck/_bg.png");
+            image = new Image("deck/_bg.png");
         } else {
             try {
                 image = new Image(getImagePath(card));
