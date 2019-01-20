@@ -3,4 +3,4 @@ out
 .idea
 .gradle
 *.iml
-
+local.properties
