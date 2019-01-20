@@ -7,7 +7,7 @@ import java.util.Stack;
 public class Player {
     private String name;
     private int playerLocation;
-    private int prob;
+    private double prob;
     private int total;
 
     private Stack<Card> cardinHand;
@@ -70,7 +70,7 @@ public class Player {
 //        return out;
 //    }
 
-    public int calcprob(Stack<Card> cardinHand) {
+    public double calcprob(Stack<Card> cardinHand) {
         // if no other cards are visible
         total = 0;
         for (Card c : cardinHand) {
@@ -78,11 +78,17 @@ public class Player {
             total += x;
 
         }
+        int count = 0;
         if (total < 17) {
             prob = 0;
         }
         else {
-            prob = ((14- (21-total))*4) / (52- cardinHand.size());
+            for (Card c: BlackjackController.dealtCards) {
+                if (c.getFace().asInt() > (21-total)) {
+                    count += 1;
+                }
+            }
+            prob = (((14- (21-total))*4) - count) / (52- BlackjackController.dealtCards.size());
         }
 
         return prob;

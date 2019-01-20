@@ -63,7 +63,7 @@ public class BlackjackUI extends Application {
         primaryStage.setMaximized(true);
 
         mController.prepareNewGame();
-        setCurrentUserActionPaneText();
+//        setCurrentUserActionPaneText();
     }
 
     // Set up user action pane
@@ -79,18 +79,18 @@ public class BlackjackUI extends Application {
         buttonDeal.setPrefSize(100, 20);
         Button buttonPass = new Button("Pass");
         buttonPass.setPrefSize(100, 20);
-
-        if (!mController.currentPlayerPointsInLimit() && !mController.getCurrentPlayerPoints().isEmpty()) {
-            buttonDeal.setDisable(true);
-        }
+//
+//        if (!mController.currentPlayerPointsInLimit() && !mController.getCurrentPlayerPoints().isEmpty()) {
+//            buttonDeal.setDisable(true);
+//        }
 
         buttonDeal.setOnMouseClicked(mouseEvent -> {
             mController.handCardToCurrentPlayer();
-            if (!mController.currentPlayerPointsInLimit()) {
-                buttonDeal.setDisable(true);
-            }
+//            if (!mController.currentPlayerPointsInLimit()) {
+//                buttonDeal.setDisable(true);
+//            }
 
-            setCurrentUserActionPaneText();
+//            setCurrentUserActionPaneText();
         });
 
         actionBox.getChildren().addAll(buttonDeal, buttonPass);
@@ -113,11 +113,11 @@ public class BlackjackUI extends Application {
             // Create new controller and new game
             mController = new BlackjackController(this);
             mController.prepareNewGame();
-            if (!mController.currentPlayerPointsInLimit()) {
-                buttonDeal.setDisable(true);
-            }
+//            if (!mController.currentPlayerPointsInLimit()) {
+//                buttonDeal.setDisable(true);
+//            }
 
-            setCurrentUserActionPaneText();
+//            setCurrentUserActionPaneText();
         });
 
         newGameBox.getChildren().setAll(buttonNewGame);
@@ -237,25 +237,25 @@ public class BlackjackUI extends Application {
         return "deck/" + faceString + suitString + ".png";
     }
 
-    private void setCurrentUserActionPaneText() {
-        Text currentPoints = new Text();
-        StringBuilder pointText = new StringBuilder("Current user point: ");
-        HashSet<Integer> userPointsEnquired = mController.getCurrentPlayerPoints();
-        if (userPointsEnquired.size() == 1) pointText.append(Integer.toString(userPointsEnquired.iterator().next()));
-        else if (userPointsEnquired.size() > 1) {
-            Iterator<Integer> userPointsEnquiredIte = userPointsEnquired.iterator();
-            while (userPointsEnquiredIte.hasNext()) {
-                pointText.append(Integer.toString(userPointsEnquiredIte.next()));
-                if (userPointsEnquiredIte.hasNext()) pointText.append("/");
-            }
-        }
-
-        currentPoints.setText(pointText.toString());
-
-        BorderPane bottomWrapper = (BorderPane) root.getBottom();
-        HBox actionBox = (HBox) bottomWrapper.getLeft();
-        actionBox.getChildren().remove(actionBox.lookup("Text"));
-        actionBox.getChildren().add(currentPoints);
-    }
+//    private void setCurrentUserActionPaneText() {
+//        Text currentPoints = new Text();
+//        StringBuilder pointText = new StringBuilder("Current user point: ");
+//        HashSet<Integer> userPointsEnquired = mController.getCurrentPlayerPoints();
+//        if (userPointsEnquired.size() == 1) pointText.append(Integer.toString(userPointsEnquired.iterator().next()));
+//        else if (userPointsEnquired.size() > 1) {
+//            Iterator<Integer> userPointsEnquiredIte = userPointsEnquired.iterator();
+//            while (userPointsEnquiredIte.hasNext()) {
+//                pointText.append(Integer.toString(userPointsEnquiredIte.next()));
+//                if (userPointsEnquiredIte.hasNext()) pointText.append("/");
+//            }
+//        }
+//
+//        currentPoints.setText(pointText.toString());
+//
+//        BorderPane bottomWrapper = (BorderPane) root.getBottom();
+//        HBox actionBox = (HBox) bottomWrapper.getLeft();
+//        actionBox.getChildren().remove(actionBox.lookup("Text"));
+//        actionBox.getChildren().add(currentPoints);
+//    }
 
 }

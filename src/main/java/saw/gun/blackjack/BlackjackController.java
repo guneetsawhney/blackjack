@@ -10,6 +10,7 @@ public class BlackjackController {
     private int currentPlayerNumber = (int) (Math.random() * totalPlayerCount);
     private BlackjackUI mUI;
     private Dealer dealer = new Dealer();
+    static HashSet<Card> dealtCards = new HashSet<>();
 
     public BlackjackController(BlackjackUI ui) {
 
@@ -46,9 +47,9 @@ public class BlackjackController {
         setNewDeck();
         setNewPlayers();
         handNewCards();
-        for (Integer i : getCurrentPlayerPoints()) {
-            System.out.println(i);
-        }
+//        for (Integer i : getCurrentPlayerPoints()) {
+//            System.out.println(i);
+//        }
     }
 
     void handNewCards() {
@@ -56,35 +57,40 @@ public class BlackjackController {
             for (Player p : players) {
                 Card c = drawCard();
                 p.addCard(c);
+                dealtCards.add(c);
 
                 mUI.paintCard(p.getPlayerLocation(), c, i);
             }
             Card c = drawCard();
             dealer.addDealerCard(c);
-            if (i == 0) mUI.paintDealerCard(i, c, true);
+            if (i == 0) {
+                mUI.paintDealerCard(i, c, true);
+                dealtCards.add(c);
+            }
             else mUI.paintDealerCard(i, c, false);
         }
     }
 
     void handCardToCurrentPlayer() {
         Card thisCard = drawCard();
+        dealtCards.add(thisCard);
         players.get(currentPlayerNumber).addCard(thisCard);
         mUI.paintCard(currentPlayerNumber, thisCard, players.get(currentPlayerNumber).getCardinHand().size());
 
-        for (Integer i : getCurrentPlayerPoints()) {
-            System.out.println(i);
-        }
+//        for (Integer i : getCurrentPlayerPoints()) {
+//            System.out.println(i);
+//        }
     }
 
-    HashSet<Integer> getCurrentPlayerPoints() {
-        return players.get(currentPlayerNumber).cardPoints();
-    }
-
-    boolean currentPlayerPointsInLimit() {
-        for (int i : getCurrentPlayerPoints()) {
-            if (i <= 21) return true;
-        }
-
-        return false;
-    }
+//    HashSet<Integer> getCurrentPlayerPoints() {
+//        return players.get(currentPlayerNumber).cardPoints();
+//    }
+//
+//    boolean currentPlayerPointsInLimit() {
+//        for (int i : getCurrentPlayerPoints()) {
+//            if (i <= 21) return true;
+//        }
+//
+//        return false;
+//    }
 }
