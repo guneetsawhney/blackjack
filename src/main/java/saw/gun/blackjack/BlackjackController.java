@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class BlackjackController {
-    private int currentPlayer = 0;
+    private int currentPlayerLocation = 0;
     private Deck mDeck;
     private ArrayList<Player> players;
     private int totalPlayerCount = 2;
@@ -73,29 +73,65 @@ public class BlackjackController {
     }
 
     void handCardToCurrentPlayer() {
+        Player currentPlayer = players.get(currentPlayerLocation);
         Card thisCard = drawCard();
         dealtCards.add(thisCard);
-        players.get(controlledPlayer).addCard(thisCard);
-        mUI.paintCard(controlledPlayer, thisCard, players.get(controlledPlayer).getCardinHand().size());
+        currentPlayer.addCard(thisCard);
+        mUI.paintCard(currentPlayerLocation, thisCard, currentPlayer.getCardinHand().size());
 
         for (Integer i : getCurrentPlayerPoints()) {
             System.out.println(i);
         }
+
+        if (!currentPlayer.pointsInLimit()) toNextPlayer();
     }
 
     HashSet<Integer> getCurrentPlayerPoints() {
-        return players.get(controlledPlayer).cardPoints();
-    }
-
-    boolean currentPlayerPointsInLimit() {
-        for (int i : getCurrentPlayerPoints()) {
-            if (i <= 21) return true;
-        }
-
-        return false;
+        return players.get(currentPlayerLocation).cardPoints();
     }
 
     double currentUserDealtProb() {
-        return players.get(controlledPlayer).calcprob();
+        return players.get(currentPlayerLocation).calcprob();
+    }
+
+    void progress() {
+        if (currentPlayerLocation >= players.size()) {
+            mUI.disableAllButton();
+        }
+        if (currentPlayerLocation != controlledPlayer) {
+            Player currentPlayer = this.players.get(currentPlayerLocation);
+            double pickUpProb = currentPlayer.calcprob();
+            if (pickUpProb > currentPlayer.getThredhold()) {
+                // Continue to next player
+                toNextPlayer();
+            } else {
+                // Pick up a card and draw
+                handCardToCurrentPlayer();
+            }
+        }
+    }
+
+    boolean controlledPlayerPointsInLimit() {
+        return players.get(controlledPlayer).pointsInLimit();
+    }
+
+    void toNextPlayer() {
+        if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++;
+    }
+
+    boolean currentPlayerIsControlled() {
+        return this.controlledPlayer == this.currentPlayerLocation;
+    }
+
+    int getCurrentPlayerLocation() {
+        return currentPlayerLocation;
+    }
+
+    boolean endOfList() {
+        return currentPlayerLocation == players.size() - 1;
+    }
+
+    int getControlledPlayer() {
+        return controlledPlayer;
     }
 }

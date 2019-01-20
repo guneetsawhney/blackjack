@@ -10,6 +10,7 @@ public class Player {
     private int playerLocation;
     private double prob;
     private int total;
+    private double thredhold = Math.random();
 
     private Stack<Card> cardinHand;
 
@@ -37,6 +38,18 @@ public class Player {
 
     public Stack<Card> getCardinHand() {
         return cardinHand;
+    }
+
+    public double getThredhold() {
+        return thredhold;
+    }
+
+    boolean pointsInLimit() {
+        for (int i : cardPoints()) {
+            if (i <= 21) return true;
+        }
+
+        return false;
     }
 
     HashSet<Integer> cardPoints() {

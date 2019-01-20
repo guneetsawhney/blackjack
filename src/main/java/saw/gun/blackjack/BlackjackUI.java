@@ -3,6 +3,7 @@ package saw.gun.blackjack;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -65,6 +66,8 @@ public class BlackjackUI extends Application {
         mController.prepareNewGame();
         setCurrentUserActionPaneText();
         setCurrentUserDealtProbability();
+        setCurrentProgress();
+        setControlledPlayer();
     }
 
     // Set up user action pane
@@ -81,20 +84,6 @@ public class BlackjackUI extends Application {
         Button buttonPass = new Button("Pass");
         buttonPass.setPrefSize(100, 20);
 
-        if (!mController.currentPlayerPointsInLimit() && !mController.getCurrentPlayerPoints().isEmpty()) {
-            buttonDeal.setDisable(true);
-        }
-
-        buttonDeal.setOnMouseClicked(mouseEvent -> {
-            mController.handCardToCurrentPlayer();
-            if (!mController.currentPlayerPointsInLimit()) {
-                buttonDeal.setDisable(true);
-            }
-
-            setCurrentUserActionPaneText();
-            setCurrentUserDealtProbability();
-        });
-
         actionBox.getChildren().addAll(buttonDeal, buttonPass);
         //endregion
 
@@ -106,6 +95,82 @@ public class BlackjackUI extends Application {
 
         Button buttonNewGame = new Button("New Game");
         buttonNewGame.setPrefSize(100, 20);
+
+        Button buttonProgress = new Button("Progress");
+        buttonProgress.setPrefSize(100, 20);
+        if (mController.currentPlayerIsControlled()) buttonProgress.setDisable(true); else buttonProgress.setDisable(false);
+
+        newGameBox.getChildren().setAll(buttonProgress, buttonNewGame);
+        //endregion
+
+        //region Button logic
+        if (mController.currentPlayerIsControlled()
+                && !mController.controlledPlayerPointsInLimit()) {
+            buttonDeal.setDisable(false);
+            buttonPass.setDisable(false);
+            buttonProgress.setDisable(true);
+        } else if (!mController.currentPlayerIsControlled()) {
+            buttonDeal.setDisable(true);
+            buttonPass.setDisable(true);
+            buttonProgress.setDisable(false);
+        }
+
+        buttonDeal.setOnMouseClicked(mouseEvent -> {
+            mController.handCardToCurrentPlayer();
+            if (mController.currentPlayerIsControlled()) {
+                if (mController.controlledPlayerPointsInLimit()) {
+                    buttonDeal.setDisable(false);
+                    buttonPass.setDisable(false);
+                    buttonProgress.setDisable(true);
+                } else {
+                    mController.toNextPlayer();
+                    buttonDeal.setDisable(true);
+                    buttonPass.setDisable(true);
+                    buttonProgress.setDisable(false);
+                }
+            }
+            else {
+                buttonDeal.setDisable(true);
+                buttonPass.setDisable(true);
+                buttonProgress.setDisable(false);
+            }
+
+            setCurrentUserActionPaneText();
+            setCurrentUserDealtProbability();
+            setCurrentProgress();
+            setControlledPlayer();
+        });
+
+        buttonPass.setOnMouseClicked(mouseEvent -> {
+
+            if (!mController.endOfList()) {
+                mController.toNextPlayer();
+            } else {
+                if (mController.currentPlayerIsControlled()) {
+                    if (mController.controlledPlayerPointsInLimit()) {
+                        buttonDeal.setDisable(false);
+                        buttonPass.setDisable(false);
+                        buttonProgress.setDisable(true);
+                    } else {
+                        mController.toNextPlayer();
+                        buttonDeal.setDisable(true);
+                        buttonPass.setDisable(true);
+                        buttonProgress.setDisable(false);
+                    }
+                }
+                else {
+                    buttonDeal.setDisable(true);
+                    buttonPass.setDisable(true);
+                    buttonProgress.setDisable(false);
+                }
+
+                setCurrentUserActionPaneText();
+                setCurrentUserDealtProbability();
+                setCurrentProgress();
+                setControlledPlayer();
+            }
+        });
+
         buttonNewGame.setOnMouseClicked(mouseEvent -> {
             // Reset UI
             dealerPane.getChildren().clear();
@@ -115,15 +180,48 @@ public class BlackjackUI extends Application {
             // Create new controller and new game
             mController = new BlackjackController(this);
             mController.prepareNewGame();
-            if (!mController.currentPlayerPointsInLimit()) {
+            if (mController.currentPlayerIsControlled() && !mController.controlledPlayerPointsInLimit()) {
+                buttonDeal.setDisable(false);
+                buttonPass.setDisable(false);
+                buttonProgress.setDisable(true);
+            } else {
                 buttonDeal.setDisable(true);
+                buttonPass.setDisable(true);
+                buttonProgress.setDisable(false);
             }
 
             setCurrentUserActionPaneText();
             setCurrentUserDealtProbability();
+            setCurrentProgress();
+            setControlledPlayer();
         });
 
-        newGameBox.getChildren().setAll(buttonNewGame);
+        buttonProgress.setOnMouseClicked(mouseEvent -> {
+            mController.progress();
+            if (mController.currentPlayerIsControlled()) {
+                if (mController.controlledPlayerPointsInLimit()) {
+                    buttonDeal.setDisable(false);
+                    buttonPass.setDisable(false);
+                    buttonProgress.setDisable(true);
+                } else {
+                    mController.toNextPlayer();
+                    buttonDeal.setDisable(true);
+                    buttonPass.setDisable(true);
+                    buttonProgress.setDisable(false);
+                }
+            }
+            else {
+                buttonDeal.setDisable(true);
+                buttonPass.setDisable(true);
+                buttonProgress.setDisable(false);
+            }
+
+            setCurrentUserActionPaneText();
+            setCurrentUserDealtProbability();
+            setCurrentProgress();
+            setControlledPlayer();
+
+        });
         //endregion
 
         wrapper.setLeft(actionBox);
@@ -275,4 +373,35 @@ public class BlackjackUI extends Application {
         actionBox.getChildren().add(currentPoints);
     }
 
+    private void setCurrentProgress() {
+        Text currentPoints = new Text();
+        currentPoints.setId("currentProgress");
+
+
+        currentPoints.setText("currentProgress: " + mController.getCurrentPlayerLocation());
+
+        BorderPane bottomWrapper = (BorderPane) root.getBottom();
+        HBox actionBox = (HBox) bottomWrapper.getLeft();
+        actionBox.getChildren().remove(actionBox.lookup("#currentProgress"));
+        actionBox.getChildren().add(currentPoints);
+    }
+
+    private void setControlledPlayer() {
+        Text currentPoints = new Text();
+        currentPoints.setId("controlledPlayer");
+
+
+        currentPoints.setText("Your controlled player: " + mController.getControlledPlayer());
+
+        BorderPane bottomWrapper = (BorderPane) root.getBottom();
+        HBox actionBox = (HBox) bottomWrapper.getLeft();
+        actionBox.getChildren().remove(actionBox.lookup("#controlledPlayer"));
+        actionBox.getChildren().add(currentPoints);
+    }
+
+    void disableAllButton() {
+        for (Node n : root.lookupAll("Button")) {
+            n.setDisable(true);
+        }
+    }
 }
