@@ -12,6 +12,7 @@ public class BlackjackController {
     private BlackjackUI mUI;
     private Dealer dealer = new Dealer();
     static HashSet<Card> dealtCards = new HashSet<>();
+    boolean endOfGame = false;
 
     public BlackjackController(BlackjackUI ui) {
 
@@ -97,6 +98,7 @@ public class BlackjackController {
     void progress() {
         if (currentPlayerLocation >= players.size()) {
             mUI.disableAllButton();
+            endOfGame = true;
         }
         if (currentPlayerLocation != controlledPlayer) {
             Player currentPlayer = this.players.get(currentPlayerLocation);
@@ -108,7 +110,7 @@ public class BlackjackController {
                 // Pick up a card and draw
                 handCardToCurrentPlayer();
             }
-        }
+        } else toNextPlayer();
     }
 
     boolean controlledPlayerPointsInLimit() {
@@ -116,7 +118,10 @@ public class BlackjackController {
     }
 
     void toNextPlayer() {
-        if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++;
+        if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++; else {
+            endOfGame = true;
+            mUI.disableAllButton();
+        }
     }
 
     boolean currentPlayerIsControlled() {
@@ -128,10 +133,18 @@ public class BlackjackController {
     }
 
     boolean endOfList() {
-        return currentPlayerLocation == players.size() - 1;
+        boolean out = currentPlayerLocation + 1 >= this.players.size();
+        endOfGame = out;
+        return out;
     }
 
     int getControlledPlayer() {
         return controlledPlayer;
+    }
+
+    void checkPlayerWon() {
+        if (players.get(currentPlayerLocation).playerWon()) {
+            toNextPlayer();
+        }
     }
 }

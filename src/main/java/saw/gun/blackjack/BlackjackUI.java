@@ -68,6 +68,7 @@ public class BlackjackUI extends Application {
         setCurrentUserDealtProbability();
         setCurrentProgress();
         setControlledPlayer();
+        mController.checkPlayerWon();
     }
 
     // Set up user action pane
@@ -95,6 +96,7 @@ public class BlackjackUI extends Application {
 
         Button buttonNewGame = new Button("New Game");
         buttonNewGame.setPrefSize(100, 20);
+        buttonNewGame.setId("buttonNewGame");
 
         Button buttonProgress = new Button("Progress");
         buttonProgress.setPrefSize(100, 20);
@@ -139,13 +141,13 @@ public class BlackjackUI extends Application {
             setCurrentUserDealtProbability();
             setCurrentProgress();
             setControlledPlayer();
+            mController.checkPlayerWon();
         });
 
         buttonPass.setOnMouseClicked(mouseEvent -> {
 
             if (!mController.endOfList()) {
                 mController.toNextPlayer();
-            } else {
                 if (mController.currentPlayerIsControlled()) {
                     if (mController.controlledPlayerPointsInLimit()) {
                         buttonDeal.setDisable(false);
@@ -168,6 +170,9 @@ public class BlackjackUI extends Application {
                 setCurrentUserDealtProbability();
                 setCurrentProgress();
                 setControlledPlayer();
+                mController.checkPlayerWon();
+            } else {
+                disableAllButton();
             }
         });
 
@@ -180,11 +185,15 @@ public class BlackjackUI extends Application {
             // Create new controller and new game
             mController = new BlackjackController(this);
             mController.prepareNewGame();
-            if (mController.currentPlayerIsControlled() && !mController.controlledPlayerPointsInLimit()) {
+            for (Node n : root.lookupAll("Button")) {
+                n.setDisable(false);
+            }
+            if (mController.currentPlayerIsControlled()
+                    && !mController.controlledPlayerPointsInLimit()) {
                 buttonDeal.setDisable(false);
                 buttonPass.setDisable(false);
                 buttonProgress.setDisable(true);
-            } else {
+            } else if (!mController.currentPlayerIsControlled()) {
                 buttonDeal.setDisable(true);
                 buttonPass.setDisable(true);
                 buttonProgress.setDisable(false);
@@ -194,10 +203,14 @@ public class BlackjackUI extends Application {
             setCurrentUserDealtProbability();
             setCurrentProgress();
             setControlledPlayer();
+            mController.checkPlayerWon();
         });
 
         buttonProgress.setOnMouseClicked(mouseEvent -> {
             mController.progress();
+            if (mController.endOfGame) {
+                return;
+            }
             if (mController.currentPlayerIsControlled()) {
                 if (mController.controlledPlayerPointsInLimit()) {
                     buttonDeal.setDisable(false);
@@ -220,6 +233,7 @@ public class BlackjackUI extends Application {
             setCurrentUserDealtProbability();
             setCurrentProgress();
             setControlledPlayer();
+            mController.checkPlayerWon();
 
         });
         //endregion
@@ -403,5 +417,6 @@ public class BlackjackUI extends Application {
         for (Node n : root.lookupAll("Button")) {
             n.setDisable(true);
         }
+        root.lookup("#buttonNewGame").setDisable(false);
     }
 }

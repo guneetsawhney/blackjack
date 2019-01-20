@@ -84,6 +84,10 @@ public class Player {
         return out;
     }
 
+    boolean playerWon() {
+        return cardPoints().contains(21);
+    }
+
     public double calcprob() {
         HashMap<Integer, Double> probs = new HashMap<>();
         double probsMult = 1.0;
