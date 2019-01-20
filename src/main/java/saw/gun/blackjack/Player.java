@@ -96,8 +96,6 @@ public class Player {
             probsMult *= currentProb;
         }
 
-
-
         return probsMult;
         //if probability is less than 0.5 then draw another card
     }

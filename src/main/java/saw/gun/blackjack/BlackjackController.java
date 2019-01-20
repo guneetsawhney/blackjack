@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class BlackjackController {
+    private int currentPlayer = 0;
     private Deck mDeck;
     private ArrayList<Player> players;
     private int totalPlayerCount = 2;
-    private int currentPlayerNumber = (int) (Math.random() * totalPlayerCount);
+    private int controlledPlayer = (int) (Math.random() * totalPlayerCount);
     private BlackjackUI mUI;
     private Dealer dealer = new Dealer();
     static HashSet<Card> dealtCards = new HashSet<>();
@@ -74,8 +75,8 @@ public class BlackjackController {
     void handCardToCurrentPlayer() {
         Card thisCard = drawCard();
         dealtCards.add(thisCard);
-        players.get(currentPlayerNumber).addCard(thisCard);
-        mUI.paintCard(currentPlayerNumber, thisCard, players.get(currentPlayerNumber).getCardinHand().size());
+        players.get(controlledPlayer).addCard(thisCard);
+        mUI.paintCard(controlledPlayer, thisCard, players.get(controlledPlayer).getCardinHand().size());
 
         for (Integer i : getCurrentPlayerPoints()) {
             System.out.println(i);
@@ -83,7 +84,7 @@ public class BlackjackController {
     }
 
     HashSet<Integer> getCurrentPlayerPoints() {
-        return players.get(currentPlayerNumber).cardPoints();
+        return players.get(controlledPlayer).cardPoints();
     }
 
     boolean currentPlayerPointsInLimit() {
@@ -95,6 +96,6 @@ public class BlackjackController {
     }
 
     double currentUserDealtProb() {
-        return players.get(currentPlayerNumber).calcprob();
+        return players.get(controlledPlayer).calcprob();
     }
 }
