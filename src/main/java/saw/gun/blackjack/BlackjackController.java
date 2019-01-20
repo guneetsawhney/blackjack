@@ -58,6 +58,8 @@ public class BlackjackController {
             }
             Card c = drawCard();
             dealerCards.add(c);
+            if (i == 0) mUI.paintDealerCard(i, c, true);
+            else mUI.paintDealerCard(i, c, false);
         }
     }
 }

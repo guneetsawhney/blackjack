@@ -3,6 +3,8 @@ package saw.gun.blackjack;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -11,11 +13,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 public class BlackjackUI extends Application {
     private BlackjackController mController = new BlackjackController(this);
-    BorderPane tablePane = new BorderPane();
-    GridPane computerPlayerPane;
+    private BorderPane tablePane = new BorderPane();
+    private GridPane computerPlayerPane;
+    private HBox dealerPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -32,11 +36,22 @@ public class BlackjackUI extends Application {
 
         // Add table
         computerPlayerPane = new GridPane();
+        tablePane.setPadding(new Insets(20));
+
         root.setCenter(tablePane);
-        computerPlayerPane.setHgap(0);
-        computerPlayerPane.setVgap(10);
+        computerPlayerPane.setHgap(10);
+        computerPlayerPane.setVgap(20);
 
         tablePane.setCenter(computerPlayerPane);
+
+        // Add Dealer's cards
+        dealerPane = new HBox();
+
+        dealerPane.setAlignment(Pos.CENTER);
+        dealerPane.setSpacing(10);
+        dealerPane.setPadding(new Insets(10));
+        BorderPane.setAlignment(dealerPane, Pos.TOP_RIGHT);
+        root.setTop(dealerPane);
 
         // Add action panes
         root.setBottom(addActionPane());
@@ -74,7 +89,10 @@ public class BlackjackUI extends Application {
 
         Button buttonNewGame = new Button("New Game");
         buttonNewGame.setPrefSize(100, 20);
-        buttonNewGame.setOnMouseClicked(mouseEvent -> mController.prepareNewGame());
+        buttonNewGame.setOnMouseClicked(mouseEvent -> {
+            dealerPane.getChildren().clear();
+            mController.prepareNewGame();
+        });
 
         newGameBox.getChildren().setAll(buttonNewGame);
         //endregion
@@ -86,13 +104,52 @@ public class BlackjackUI extends Application {
         return wrapper;
     }
 
+    void paintDealerCard(int order, Card card, boolean faceForward) {
+        ImageView imageView = new ImageView();
+        Image image;
+        if (!faceForward) {
+            image = image = new Image("deck/_bg.png");
+        } else {
+            try {
+                image = new Image(getImagePath(card));
+            } catch (IllegalArgumentException e) {
+                image = new Image("deck/_bg.png");
+            }
+        }
+
+        imageView.setImage(image);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+
+        dealerPane.getChildren().add(imageView);
+    }
+
     void paintCard(int location, Card card, int cardOrder) {
-        int cardLocationX = location * 100;
-        int cardLocationY = 100 + cardOrder * 20;
+//        int cardLocationX = location * 100;
+//        int cardLocationY = 100 + cardOrder * 20;
 
-        SvgImageLoaderFactory.install();
+        ImageView imageView = new ImageView();
+        Image image;
 
-        // Get deck image's path
+        String imagePath = getImagePath(card);
+
+        try {
+            image = new Image(imagePath);
+        } catch (IllegalArgumentException e) {
+            image = new Image("deck/_bg.png");
+        }
+
+        imageView.setImage(image);
+        imageView.setFitHeight(150);
+        imageView.setPreserveRatio(true);
+
+        computerPlayerPane.add(imageView, location, cardOrder);
+
+    }
+
+    @NotNull
+    private static String getImagePath(Card card) {
+
         String faceString = "_b";
         switch (card.getFace()) {
             case ACE:
@@ -151,21 +208,7 @@ public class BlackjackUI extends Application {
                 suitString = "s";
                 break;
         }
-
-        ImageView imageView = new ImageView();
-        Image image;
-
-        try {
-            image = new Image("deck/" + faceString + suitString + ".png");
-        } catch (IllegalArgumentException e) {
-            image = new Image("deck/_bg.png");
-        }
-
-        imageView.setImage(image);
-        imageView.setFitHeight(150);
-        imageView.setPreserveRatio(true);
-
-        computerPlayerPane.add(imageView, location, cardOrder);
-
+        return "deck/" + faceString + suitString + ".png";
     }
+
 }
