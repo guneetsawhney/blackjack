@@ -3,6 +3,7 @@ package saw.gun.blackjack;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Stack;
 
 public class BlackjackController {
     private int currentPlayerLocation = 0;
@@ -123,6 +124,7 @@ public class BlackjackController {
         if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++;
         else {
             endOfGame = true;
+            dealDealer();
             mUI.disableAllButton();
         }
     }
@@ -150,4 +152,19 @@ public class BlackjackController {
             toNextPlayer();
         }
     }
+
+    void dealDealer() {
+        Stack<Card> cards = dealer.getDealerCards();
+        mUI.removeBackwardCard();
+
+        mUI.paintDealerCard(1, dealer.getDealerCards().peek(), true);
+
+        while (dealer.pointsInLimit()) {
+            Card thisCard = drawCard();
+            dealer.addDealerCard(thisCard);
+            mUI.paintDealerCard(dealer.getDealerCards().size(), thisCard, true);
+        }
+
+    }
+
 }

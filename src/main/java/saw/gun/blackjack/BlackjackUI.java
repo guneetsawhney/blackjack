@@ -120,7 +120,8 @@ public class BlackjackUI extends Application {
         buttonDeal.setOnMouseClicked(mouseEvent -> {
             mController.handCardToCurrentPlayer();
             mController.checkPlayerWon();
-            if (!mController.endOfGame) {
+            if (mController.endOfGame) {
+                mController.dealDealer();
                 disableAllButton();
                 return;
             }
@@ -177,6 +178,7 @@ public class BlackjackUI extends Application {
                 setControlledPlayer();
                 mController.checkPlayerWon();
             } else {
+                mController.dealDealer();
                 disableAllButton();
             }
         });
@@ -189,6 +191,7 @@ public class BlackjackUI extends Application {
 
             // Create new controller and new game
             mController = new BlackjackController(this);
+            mController.endOfGame = false;
             mController.prepareNewGame();
             for (Node n : root.lookupAll("Button")) {
                 n.setDisable(false);
@@ -264,6 +267,7 @@ public class BlackjackUI extends Application {
         Image image;
         if (!faceForward) {
             image = new Image("deck/_bg.png");
+            imageView.setId("faceBackward");
         } else {
             try {
                 image = new Image(getImagePath(card));
@@ -432,5 +436,9 @@ public class BlackjackUI extends Application {
             n.setDisable(true);
         }
         root.lookup("#buttonNewGame").setDisable(false);
+    }
+
+    void removeBackwardCard() {
+        dealerPane.getChildren().remove(dealerPane.lookup("#faceBackward"));
     }
 }
