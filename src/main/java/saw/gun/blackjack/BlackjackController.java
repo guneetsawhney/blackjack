@@ -47,9 +47,9 @@ public class BlackjackController {
         setNewDeck();
         setNewPlayers();
         handNewCards();
-//        for (Integer i : getCurrentPlayerPoints()) {
-//            System.out.println(i);
-//        }
+        for (Integer i : getCurrentPlayerPoints()) {
+            System.out.println(i);
+        }
     }
 
     void handNewCards() {
@@ -77,20 +77,24 @@ public class BlackjackController {
         players.get(currentPlayerNumber).addCard(thisCard);
         mUI.paintCard(currentPlayerNumber, thisCard, players.get(currentPlayerNumber).getCardinHand().size());
 
-//        for (Integer i : getCurrentPlayerPoints()) {
-//            System.out.println(i);
-//        }
+        for (Integer i : getCurrentPlayerPoints()) {
+            System.out.println(i);
+        }
     }
 
-//    HashSet<Integer> getCurrentPlayerPoints() {
-//        return players.get(currentPlayerNumber).cardPoints();
-//    }
-//
-//    boolean currentPlayerPointsInLimit() {
-//        for (int i : getCurrentPlayerPoints()) {
-//            if (i <= 21) return true;
-//        }
-//
-//        return false;
-//    }
+    HashSet<Integer> getCurrentPlayerPoints() {
+        return players.get(currentPlayerNumber).cardPoints();
+    }
+
+    boolean currentPlayerPointsInLimit() {
+        for (int i : getCurrentPlayerPoints()) {
+            if (i <= 21) return true;
+        }
+
+        return false;
+    }
+
+    double currentUserDealtProb() {
+        return players.get(currentPlayerNumber).calcprob();
+    }
 }
