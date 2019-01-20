@@ -14,7 +14,8 @@ import javafx.stage.Stage;
 
 public class BlackjackUI extends Application {
     private BlackjackController mController = new BlackjackController(this);
-    GridPane tablePane;
+    BorderPane tablePane = new BorderPane();
+    GridPane computerPlayerPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,10 +31,12 @@ public class BlackjackUI extends Application {
         root.setStyle("-fx-background-color: #5db779"); // Green table!
 
         // Add table
-        tablePane = new GridPane();
+        computerPlayerPane = new GridPane();
         root.setCenter(tablePane);
-        tablePane.setHgap(0);
-        tablePane.setVgap(10);
+        computerPlayerPane.setHgap(0);
+        computerPlayerPane.setVgap(10);
+
+        tablePane.setCenter(computerPlayerPane);
 
         // Add action panes
         root.setBottom(addActionPane());
@@ -83,7 +86,7 @@ public class BlackjackUI extends Application {
         return wrapper;
     }
 
-    public void paintCard(int location, Card card, int cardOrder) {
+    void paintCard(int location, Card card, int cardOrder) {
         int cardLocationX = location * 100;
         int cardLocationY = 100 + cardOrder * 20;
 
@@ -162,7 +165,7 @@ public class BlackjackUI extends Application {
         imageView.setFitHeight(150);
         imageView.setPreserveRatio(true);
 
-        tablePane.add(imageView, location, cardOrder);
+        computerPlayerPane.add(imageView, location, cardOrder);
 
     }
 }

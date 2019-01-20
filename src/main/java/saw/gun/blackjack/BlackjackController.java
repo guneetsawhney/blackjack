@@ -1,12 +1,15 @@
 package saw.gun.blackjack;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class BlackjackController {
     private Deck mDeck;
     private ArrayList<Player> players;
-    private int playerNumber = 2;
+    private int totalPlayerCount = 2;
+    private int currentPlayerNumber = (int) (Math.random() * totalPlayerCount);
     private BlackjackUI mUI;
+    private Stack<Card> dealerCards = new Stack<>();
 
     public BlackjackController(BlackjackUI ui) {
 
@@ -27,7 +30,8 @@ public class BlackjackController {
 
     void setNewPlayers() {
         players.clear();
-        for (int i = 0; i < playerNumber; i++) {
+        dealerCards.clear();
+        for (int i = 0; i < totalPlayerCount; i++) {
             players.add(new Player(Integer.toString(i+1), i));
         }
     }
@@ -52,6 +56,8 @@ public class BlackjackController {
 
                 mUI.paintCard(p.getPlayerLocation(), c, i);
             }
+            Card c = drawCard();
+            dealerCards.add(c);
         }
     }
 }
