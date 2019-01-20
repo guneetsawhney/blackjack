@@ -72,13 +72,6 @@ public class Player {
     }
 
     public double calcprob() {
-        // if no other cards are visible
-//        total = 0;
-//        for (Card c : cardinHand) {
-//            int x = c.getFace().asInt();
-//            total += x;
-//
-//        }
         HashMap<Integer, Double> probs = new HashMap<>();
         double probsMult = 1.0;
         for (int res : cardPoints()) {
@@ -97,7 +90,7 @@ public class Player {
                         count += 1;
                     }
                 }
-                currentProb = (double) (((14- (21-res))*4) - count) / (52- BlackjackController.dealtCards.size());
+                currentProb = (double) (((13- (21-res))*4) - count) / (52- BlackjackController.dealtCards.size());
             }
             probs.put(res, currentProb);
             probsMult *= currentProb;
