@@ -1,62 +1,50 @@
 package saw.gun.blackjack;
 
-import io.improbable.keanu.network.BayesianNetwork;
 import io.improbable.keanu.tensor.generic.GenericTensor;
 import io.improbable.keanu.vertices.dbl.DoubleVertex;
 import io.improbable.keanu.vertices.dbl.nonprobabilistic.ConstantDoubleVertex;
 import io.improbable.keanu.vertices.generic.probabilistic.discrete.CategoricalVertex;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Deck {
-
     private CategoricalVertex<Card, GenericTensor<Card>> deck;
-    private Iterator<Map.Entry<Card, DoubleVertex>> deckIterator;
-    private int iteratorCount = -1;
-    private double deckSize = (Card.Suit.values().length * Card.Face.values().length);
+    private int deckSize = (Card.Suit.values().length * Card.Face.values().length);
+    private Set drawnCards = new HashSet<Card>();
 
     public Deck(){
         LinkedHashMap<Card, DoubleVertex> unshuffledDeck = new LinkedHashMap<>();
-
-        while (unshuffledDeck.size() < deckSize) {
-            Card c = Card.generateRandomCard();
-            if (!unshuffledDeck.containsKey(c)) {
+        for (Card.Suit suit : Card.Suit.values()) {
+            for (Card.Face face : Card.Face.values()) {
+                Card c = new Card(face, suit);
                 unshuffledDeck.put(c, new ConstantDoubleVertex(1.0 / deckSize));
             }
         }
         deck = new CategoricalVertex<>(unshuffledDeck);
-        deckIterator = deck.getSelectableValues().entrySet().iterator();
     }
 
     public Card drawCard() {
-        Card nextCard = deckIterator.next().getKey();
-        deck.getSelectableValues().put(nextCard, new ConstantDoubleVertex(0));
-        iteratorCount++;
+        int index = new Random().nextInt(deckSize);
+        Card card = (Card) deck.getSelectableValues().keySet().toArray()[index];
+        deck.getSelectableValues().put(card, new ConstantDoubleVertex(0));
+        deckSize--;
+        drawnCards.add(card);
         for (Card c : deck.getSelectableValues().keySet()){
-            if (c != nextCard){ //doing stuff
-                deck.getSelectableValues().replace(c, new ConstantDoubleVertex(1/(deckSize -1)));
+            if (!drawnCards.contains(c)){ //doing stuff
+                deck.getSelectableValues().replace(c, new ConstantDoubleVertex(1.0/deckSize));
             }
         }
-
-        return nextCard;
+        return card;
     }
 
-    public void tryingStuffOut(){
-
-
-        BayesianNetwork bae = new BayesianNetwork(deck.getConnectedGraph());
-
-
-    }
-
-
-
-
-    public static void main(String[] args){
-        Deck d = new Deck();
-        d.drawCard();
+    public Map<Integer, Double> calculateValueProbs(){
+        Map<Card, DoubleVertex> deckMap = deck.getSelectableValues();
+        Map<Integer, Double> valueProbs = new HashMap<>();
+        for (Card c : deckMap.keySet()){
+            int cardValue = c.getPoints();
+            double cardProb = deckMap.get(c).getValue().getValue(0);
+            valueProbs.put(cardValue, valueProbs.getOrDefault(cardValue, 0.0) + cardProb);
+        }
+        return valueProbs;
     }
 }
 
