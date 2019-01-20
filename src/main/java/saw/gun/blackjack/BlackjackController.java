@@ -1,5 +1,6 @@
 package saw.gun.blackjack;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -7,7 +8,7 @@ public class BlackjackController {
     private int currentPlayerLocation = 0;
     private Deck mDeck;
     private ArrayList<Player> players;
-    private int totalPlayerCount = 2;
+    private int totalPlayerCount = 4;
     private int controlledPlayer = (int) (Math.random() * totalPlayerCount);
     private BlackjackUI mUI;
     private Dealer dealer = new Dealer();
@@ -70,8 +71,7 @@ public class BlackjackController {
             if (i == 0) {
                 mUI.paintDealerCard(i, c, true);
                 dealtCards.add(c);
-            }
-            else mUI.paintDealerCard(i, c, false);
+            } else mUI.paintDealerCard(i, c, false);
         }
     }
 
@@ -120,7 +120,8 @@ public class BlackjackController {
     }
 
     void toNextPlayer() {
-        if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++; else {
+        if (currentPlayerLocation + 1 < this.players.size()) currentPlayerLocation++;
+        else {
             endOfGame = true;
             mUI.disableAllButton();
         }
